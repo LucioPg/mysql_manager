@@ -1,5 +1,6 @@
 import mysql.connector
 from datetime import date
+from data_classes import Ospite, Prenotazione
 from mysql.connector import errorcode
 
 
@@ -88,8 +89,7 @@ class Connector:
 
     def insert(self, row_list_dict, table):
         """
-        :param row_list_dict: list of dicts --> field: value
-                ex: [{name: 'Lucio', age: 37}, {name: 'Antonella', age: 37}]
+        :param row_list_dict: list of dataClasses
         :param table:
         :return:
         """
@@ -139,36 +139,11 @@ class Connector:
 
 if __name__ == '__main__':
     mydb = Connector(database='test_db')
-    # mydb.exec_(f"DROP DATABASE {mydb.database}")
     mydb.list_databases()
-    # my_fields = {'id': ('INTEGER', 10, 'NOT NULL PRIMARY_KEY AUTO_INCREMENT'),
-    #              'name': ('VARCHAR', 15),
-    #              'surname': ('VARCHAR', 15),
-    #              'phone': ('VARCHAR', 15),
-    #              'email': ('VARCHAR', 15),
-    #              'create_on': ('DATE', None)}
-    my_fields = {'id': ('INTEGER', None, 'NOT NULL AUTO_INCREMENT PRIMARY KEY'),
-                 'name': ('VARCHAR', 15, 'NOT NULL'),
-                 'surname': ('VARCHAR', 15, 'NOT NULL'),
-                 'phone': ('VARCHAR', 15, 'NOT NULL'),
-                 'email': ('VARCHAR', 30, 'NOT NULL'),
-                 'create_on': ('DATE', None, 'NOT NULL'),
-                 }
+    my_fields = Ospite.ospiti_table_fields
     ins = 'studenti (nome, age) VALUES (%s, %s)',('Lucio', '37')
     command_create_table = mydb.create_table('ospiti', my_fields)
-    my_fields = [{'name': 'Lucio',
-                 'surname': 'Di Capua',
-                 'phone': '3343519984',
-                 'email': 'lucio.di.capua@gmail.com',
-                 'create_on': date.today(),
-                 },
-                 {'name': 'Antonella',
-                  'surname': 'Andrisani',
-                  'phone': '3922025247',
-                  'email': 'anto.andrisani@gmail.com',
-                  'create_on': date.today(),
-                  }
-                 ]
+
     mydb.insert(my_fields, 'ospiti')
     mydb.my_connector.commit()
     # mydb.cursor.execute(f"USE {mydb.database}")
